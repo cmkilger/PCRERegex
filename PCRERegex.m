@@ -26,15 +26,53 @@
 NSString * PCRERegexErrorDomain = @"com.corykilger.pcre.ErrorDomain";
 NSString * PCRERegexErrorOffsetKey = @"PCRERegexErrorOffsetKey";
 
+int PCRERegexCaseless           = PCRE_CASELESS;
+int PCRERegexMultiline          = PCRE_MULTILINE;
+int PCRERegexDotAll             = PCRE_DOTALL;
+int PCRERegexExtended           = PCRE_EXTENDED;
+int PCRERegexAnchored           = PCRE_ANCHORED;
+int PCRERegexDollarEndOnly      = PCRE_DOLLAR_ENDONLY;
+int PCRERegexExtra              = PCRE_EXTRA;
+int PCRERegexNotBOL             = PCRE_NOTBOL;
+int PCRERegexNotEOL             = PCRE_NOTEOL;
+int PCRERegexUngreedy           = PCRE_UNGREEDY;
+int PCRERegexNotEmpty           = PCRE_NOTEMPTY;
+int PCRERegexUTF8               = PCRE_UTF8;
+int PCRERegexNoAutoCapture      = PCRE_NO_AUTO_CAPTURE;
+int PCRERegexNoUTF8Check        = PCRE_NO_UTF8_CHECK;
+int PCRERegexAutoCallout        = PCRE_AUTO_CALLOUT;
+int PCRERegexPartialSoft        = PCRE_PARTIAL_SOFT;
+int PCRERegexDFAShortest        = PCRE_DFA_SHORTEST;
+int PCRERegexDFARestart         = PCRE_DFA_RESTART;
+int PCRERegexFirstline          = PCRE_FIRSTLINE;
+int PCRERegexDupNames           = PCRE_DUPNAMES;
+int PCRERegexNewlineCR          = PCRE_NEWLINE_CR;
+int PCRERegexNewlineLF          = PCRE_NEWLINE_LF;
+int PCRERegexNewlineCRLF        = PCRE_NEWLINE_CRLF;
+int PCRERegexNewlineAny         = PCRE_NEWLINE_ANY;
+int PCRERegexNewlineAnyCRLF     = PCRE_NEWLINE_ANYCRLF;
+int PCRERegexBSRAnyCRLF         = PCRE_BSR_ANYCRLF;
+int PCRERegexBSRUnicode         = PCRE_BSR_UNICODE;
+int PCRERegexJavascriptCompat   = PCRE_JAVASCRIPT_COMPAT;
+int PCRERegexNoStartOptimize    = PCRE_NO_START_OPTIMIZE;
+int PCRERegexPartialHard        = PCRE_PARTIAL_HARD;
+int PCRERegexNotEmptyAtStart    = PCRE_NOTEMPTY_ATSTART;
+int PCRERegexUCP                = PCRE_UCP;
+
 @implementation PCRERegex
 
 // Convenience method to create a new regex object
 + (id) regexWithPattern:(NSString *)pattern error:(NSError **)error {
-	return [[[self alloc] initWithPattern:pattern error:error] autorelease];
+	return [[[self alloc] initWithPattern:pattern options:0 error:error] autorelease];
+}
+
+// Convenience method to create a new regex object
++ (id) regexWithPattern:(NSString *)pattern options:(int)options error:(NSError **)error {
+	return [[[self alloc] initWithPattern:pattern options:options error:error] autorelease];
 }
 
 // Initializes a new regex object with a pattern string. If compilation fails it can return an error by reference.
-- (id) initWithPattern:(NSString *)pattern error:(NSError **)error {
+- (id) initWithPattern:(NSString *)pattern options:(int)options error:(NSError **)error {
 	if (![super init])
 		return nil;
 	
@@ -42,7 +80,7 @@ NSString * PCRERegexErrorOffsetKey = @"PCRERegexErrorOffsetKey";
 	int errorCode = 0;
 	const char * errorString = NULL;
 	int errorOffset = 0;
-	compiledPattern = pcre_compile2([pattern cStringUsingEncoding:NSUTF8StringEncoding], PCRE_UTF8|PCRE_MULTILINE, &errorCode, &errorString, &errorOffset, NULL);
+	compiledPattern = pcre_compile2([pattern cStringUsingEncoding:NSUTF8StringEncoding], PCRERegexUTF8|options, &errorCode, &errorString, &errorOffset, NULL);
 	
 	// If compilation fails, create an error, cleanup, and return nil
 	if (!compiledPattern) {
@@ -83,9 +121,14 @@ NSString * PCRERegexErrorOffsetKey = @"PCRERegexErrorOffsetKey";
 
 // Finds the first match in the string, starting from the start offset. Returns NO if no match was found, and sets error if an error occurs.  Runs the block if successful.
 - (BOOL) firstMatchInString:(NSString *)string withStartOffset:(NSUInteger)startOffset error:(NSError**)error usingBlock:(void (^)(NSUInteger captureCount, NSRange capturedRanges[captureCount]))block {
+	return [self firstMatchInCString:[string cStringUsingEncoding:NSUTF8StringEncoding] withLength:[string length] startOffset:startOffset error:error usingBlock:block];
+}
+
+// Finds the first match in the C string, starting from the start offset. Returns NO if no match was found, and sets error if an error occurs.  Runs the block if successful.
+- (BOOL) firstMatchInCString:(const char *)string withLength:(int)length startOffset:(NSUInteger)startOffset error:(NSError**)error usingBlock:(void (^)(NSUInteger captureCount, NSRange capturedRanges[captureCount]))block {
 	// Perform the matching
 	int ovector[MAX_CAPTURE_COUNT*3];
-	int captureCount = pcre_exec(compiledPattern, studyInfo, [string cStringUsingEncoding:NSUTF8StringEncoding], [string length], startOffset, 0, ovector, MAX_CAPTURE_COUNT*3);
+	int captureCount = pcre_exec(compiledPattern, studyInfo, string, length, startOffset, PCRE_NO_UTF8_CHECK, ovector, MAX_CAPTURE_COUNT*3);
 	
 	// Just return NO if no match was found, but there was no real error
 	if (captureCount == -1) {

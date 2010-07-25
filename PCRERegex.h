@@ -71,7 +71,7 @@ struct pcre_extra;
 	struct pcre_extra * studyInfo;
 }
 
-/** Returns a regex object created by compiling the pattern.
+/** Returns a regex object created by compiling the pattern. This is the same as calling +regexWithPattern:options:error with no options.
  @param pattern The pattern that will be compiled.
  @param error If an error occurs, upon return contains an NSError object that describes the problem. If you are not interested in possible errors, pass in NULL.
  @return A PCRERegex object created by compiling the pattern. If an error occurs during compilation, returns nil.

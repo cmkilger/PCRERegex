@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		9A33D50D11F9F6F0009ED5A6 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 9A33D4E411F9F6F0009ED5A6 /* config.h */; };
 		9A33D50E11F9F6F0009ED5A6 /* dftables.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A33D4E511F9F6F0009ED5A6 /* dftables.c */; };
-		9A33D50F11F9F6F0009ED5A6 /* pcre_chartables.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A33D4E611F9F6F0009ED5A6 /* pcre_chartables.c */; };
 		9A33D51011F9F6F0009ED5A6 /* pcre_compile.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A33D4E711F9F6F0009ED5A6 /* pcre_compile.c */; };
 		9A33D51111F9F6F0009ED5A6 /* pcre_config.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A33D4E811F9F6F0009ED5A6 /* pcre_config.c */; };
 		9A33D51211F9F6F0009ED5A6 /* pcre_dfa_exec.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A33D4E911F9F6F0009ED5A6 /* pcre_dfa_exec.c */; };
@@ -265,7 +264,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A33D50E11F9F6F0009ED5A6 /* dftables.c in Sources */,
-				9A33D50F11F9F6F0009ED5A6 /* pcre_chartables.c in Sources */,
 				9A33D51011F9F6F0009ED5A6 /* pcre_compile.c in Sources */,
 				9A33D51111F9F6F0009ED5A6 /* pcre_config.c in Sources */,
 				9A33D51211F9F6F0009ED5A6 /* pcre_dfa_exec.c in Sources */,

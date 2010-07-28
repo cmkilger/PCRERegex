@@ -147,7 +147,7 @@ int PCRERegexUCP                = PCRE_UCP;
 	}
 	
 	// Allocate memory for the ranges
-	NSRange * capturedRanges = malloc(captureCount * sizeof(NSRange));
+	NSRange capturedRanges[MAX_CAPTURE_COUNT];
 	
 	// Fill the memory with the appropriate ranges
 	for (int i = 0; i < captureCount; i++) {
@@ -156,17 +156,15 @@ int PCRERegexUCP                = PCRE_UCP;
 		capturedRanges[i] = NSMakeRange(start, end-start);
 	}
 	
-	// Rune the block
+	// Run the block
 	block(captureCount, capturedRanges);
-	
-	// Free the range memory
-	free(capturedRanges);
 	
 	return YES;
 }
 
 // Returns a localized string for an error code that results from pcre_exec.
 + (NSString *) localizedDescriptionForErrorCode:(int)errorCode {
+	
 	switch (errorCode) {
 		case PCRE_ERROR_NOMATCH:
 			return NSLocalizedString(@"The subject string did not match the pattern.", nil);

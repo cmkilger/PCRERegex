@@ -1,3 +1,5 @@
 PCRERegex is a thin Objective-C wrapper for PCRE intended for use on the iPhone and iPad.  It was written for a specific purpose and not for general regular expression use, though expanding it would not be entirely difficult. If you need something more robust I recommend RegexKitLite.
 
 NOTE: PCRERegex uses blocks.  You should use iOS 4.0+ or PLBlocks.
+
+Update: This is way old. Consider using this project instead: https://github.com/osolo/PCRE2RegularExpression
